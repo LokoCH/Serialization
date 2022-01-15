@@ -1,43 +1,31 @@
-﻿//using System;
-//using System.Collections;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
 
-//namespace ConsoleApp12
-//{
-//    class CustomerEnumerator : IEnumerator<Customer>
-//    {
-//        private readonly Customer[] _customers;
-//        private int _index;
+namespace Serialization
+{
+    class CustomerEnumerator : IEnumerator<Customer>
+    {
+        private readonly CustomersReader _reader;
+        private Customer _customer;
 
-//        public CustomerEnumerator(IEnumerable<Customer> customers)
-//        {
-//            _customers = customers.ToArray();
-//        }
-//        public Customer Current
-//        {
-//            get
-//            {
-//                return _customers[_index];
-//            }
-//        }
+        public CustomerEnumerator(CustomersReader cr)
+        {
+           _reader = cr;
+        }
+        public Customer Current => _customer;
 
-//        object IEnumerator.Current
-//        {
-//            get;
-//        }
-//        public void Dispose()
-//        {
-//        }
+        object IEnumerator.Current => throw new NotImplementedException();
 
-//        public bool MoveNext()
-//        {
-//            _index++;
-//        }
+        public bool MoveNext()
+        {
+            return (_customer = _reader.ReadNext()) != null;
+        }
 
-//        public void Reset()
-//        {
-//        }
-//    }
-//}
+        public void Dispose() { }
+
+        public void Reset(){}
+    }
+}

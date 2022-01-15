@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace ConsoleApp12
+namespace Serialization
 {
-    public class OrderReader : BaseModelReader
+    public class OrderReader : BaseModelReader, IEnumerable<Order>
     {
         private readonly IEnumerable<Customer> _customers;
         private readonly IEnumerable<Product> _products;
@@ -15,24 +16,10 @@ namespace ConsoleApp12
             _customers = customers;
             _products = products;
         }
-        public IEnumerable<Order> ReadAll()
+
+        public IEnumerator<Order> GetEnumerator()
         {
-            if (IsOpened) Close();
-            Order c;
-            while ((c = ReadNext()) != null)
-            {
-                foreach (var customer in _customers)
-                {
-                    foreach (var product in _products)
-                    {
-                        if (c.CustomerId == customer.Id && c.ProductId == product.Id)
-                        {
-                            customer.Products.Add(product);
-                        }
-                    }
-                }
-                yield return c;
-            }
+            return new OrderEnumerator(this);
         }
 
         public Order ReadNext()
@@ -41,8 +28,24 @@ namespace ConsoleApp12
             var s = ReadLine();
             if (s == null)
                 return null;
-            return JsonSerializer.Deserialize<Order>(s);
+            Order tmp = JsonSerializer.Deserialize<Order>(s);
+
+            foreach (var customer in _customers)
+            {
+                foreach (var product in _products)
+                {
+                    if (tmp.CustomerId == customer.Id && tmp.ProductId == product.Id)
+                    {
+                        customer.Products.Add(new Product(product, tmp.Count));
+                    }
+                }
+            }
+            return tmp;
         }
 
+            IEnumerator IEnumerable.GetEnumerator()
+        {
+                throw new NotImplementedException();
+            }
+        }
     }
-}

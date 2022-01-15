@@ -2,74 +2,121 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
+using System.IO;
+using System.Text.Json;
 
-namespace ConsoleApp12
+namespace Serialization
 {
+
     class Program
     {
+        public static int Selector(int count)
+        {
+            int select;
+            while (!int.TryParse(Console.ReadLine(), out select) || (select < 0 || select > count))
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Ошибка ввода");
+                Console.ResetColor();
+                Console.ReadKey();
+                return -1;
+            }
+            return select;
+        }
         static void Main(string[] args)
         {
-            IEnumerable<Customer> customers;
-            using (var reader = new CustomersReader("customers.json"))
+            List<Customer> customers = new List<Customer>();
+            List<Product> products = new List<Product>();
+            List<Order> orders = new List<Order>();
+
+            using (var reader = new ProductReader("Testproducts.json"))
             {
-                //Console.WriteLine("Customers:");
-                customers = reader.ReadAll().ToArray();
-                //foreach (var item in customers)
-                //{
-                //    Console.WriteLine($"{item.Id}, {item.Name}, {item.Phone}");
-                //}
+                products = reader.ToList();
             }
 
-            IEnumerable<Product> products;
-            using (var reader = new ProductReader("products.json"))
+            using (var reader = new CustomersReader("Testcustomers.json"))
             {
-                //Console.WriteLine("Products:");
-                products = reader.ReadAll();
-                //foreach (var item in products)
-                //{
-                //    Console.WriteLine($"{item.Id}, {item.Name}, {item.Price}");
-                //}
+                customers = reader.ToList();
             }
-            Console.WriteLine("---------------------------------");
 
-            IEnumerable<Order> orders;
-            using (var reader = new OrderReader("orders.json", customers, products))
+            using (var reader = new OrderReader("Testorders.json", customers, products))
             {
-                orders = reader.ReadAll();
-                orders.Count();
+                orders = reader.ToList();
+            }
 
-                // с помощью foreach
-                //foreach (var order in orders)
-                //{
-                //    foreach (var customer in customers)
-                //    {
-                //        foreach (var product in products)
-                //        {
-                //            if (customer.Id == order.CustomerId && product.Id == order.ProductId)
-                //                Console.WriteLine($"Покупатель: {customer.Name}, заказ: {product.Name} по цене {product.Price}");
-                //        }
-                //    }
-                //}
+            int select = 0;
+            while (true)
+            {
+                MenuList.MainMenu();
+                select = Selector(6);
 
-                // с помощью LINQ
-                //var selected = from customer in customers
-                //               from product in products
-                //               from order in orders
-                //               where product.Id == order.ProductId && customer.Id == order.CustomerId
-                //               select (customer, product);
-
-                Console.WriteLine("-------------------------------------");
-
-                foreach (var customer in customers)
+                if (select == 0)
                 {
-                    Console.WriteLine($"Покупатель: {customer.Name}, email: {customer.Email}, телефон:{customer.Phone}");
-                    Console.WriteLine("Товары:");
-                    Console.WriteLine($"\tНазвание\tЦена");
-                    foreach (var product in customer.Products)
-                    {
-                        Console.WriteLine($"\t{product.Name}\t{product.Price}");
-                    }
-                    Console.WriteLine($"Сумма заказов: {customer.Products.Sum(c => c.Price) }");
+                    Saver.SaveAll(customers, products, orders);
+                    break;
+                }
+                if (select == -1)
+                    continue;
+
+                switch (select)
+                {
+                    case 1:
+                        while (true)
+                        {
+                            MenuList.Menu_1(customers);
+                            int select_1 = Selector(customers.Count);
+                            if (select_1 == 0)
+                                break;
+                            if (select_1 == -1)
+                                continue;
+                            while (true)
+                            {
+                                MenuList.Menu_1_1(customers.ElementAt(select_1 - 1));
+                                int select_1_1 = Selector(2);
+                                if (select_1_1 == 0)
+                                    break;
+                                if (select_1_1 == -1)
+                                    continue;
+                                switch (select_1_1)
+                                {
+                                    case 1:
+                                        Order tmp;
+                                        if ((tmp = Creator.AddOrder(customers.ElementAt(select_1 - 1), products)) != null)
+                                            orders.Add(tmp); break;
+                                    case 2:
+                                        while (true)
+                                        {
+                                            MenuList.Menu_1_1_2(customers.ElementAt(select_1 - 1));
+                                            int select_1_1_2 = Selector(0);
+                                            if (select_1_1_2 == 0)
+                                                break;
+                                            if (select_1_1_2 == -1)
+                                                continue;
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                        break;
+                    case 2:
+                        while (true)
+                        {
+                            MenuList.Menu_2(products, customers);
+                            select = Selector(0);
+                            if (select == 0)
+                                break;
+                            if (select == -1)
+                                continue;
+                        }
+                        break;
+                    case 3: customers.Add(Creator.AddCustomer()); break;
+                    case 4: products.Add(Creator.AddProduct()); break;
+                    case 5:
+                            Console.Clear();
+                            Console.WriteLine(OrdersInfo.Summa(customers));
+                            Console.ReadKey();
+                        break;                   
                 }
             }
         }

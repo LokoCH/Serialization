@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp12
+namespace Serialization
 {
     public class Customer
     {
@@ -12,7 +12,7 @@ namespace ConsoleApp12
         {
             Products = new List<Product>();
         }
-        public Customer(Guid id, string name, string phone, string email, List<Product> products)
+        public Customer(Guid id, string name, string phone, string email,List<Product> products)
         {
             Id = id;
             Name = name;

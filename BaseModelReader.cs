@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace ConsoleApp12
+namespace Serialization
 {
     public abstract class BaseModelReader : IDisposable
     {
@@ -20,12 +20,6 @@ namespace ConsoleApp12
 
         protected void Open()
         {
-            //if (_stream == null)
-            //    _stream = new StreamReader(_fileName);
-            //else
-            //    _stream.BaseStream.Position = 0;
-            //if (_stream != null)
-            //    _stream.Close();
             _stream = new StreamReader(_fileName);
         }
 

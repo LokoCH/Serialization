@@ -4,28 +4,26 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace ConsoleApp12
+namespace Serialization
 {
-    public class CustomersReader : BaseModelReader//, IEnumerable<Customer>
+    public class CustomersReader : BaseModelReader, IEnumerable<Customer>
     {
-        public CustomersReader(string filename) : base(filename)
-        {
-        }
+        public CustomersReader(string filename) : base(filename) { }
 
         public IEnumerator<Customer> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return new CustomerEnumerator(this);
         }
 
-        public IEnumerable<Customer> ReadAll()
-        {
-            if (IsOpened) Close();
-            Customer c;
-            while ((c = ReadNext()) != null)
-            {
-                yield return c;
-            }
-        }
+        //public IEnumerable<Customer> ReadAll()
+        //{
+        //    if (IsOpened) Close();
+        //    Customer c;
+        //    while ((c = ReadNext()) != null)
+        //    {
+        //        yield return c;
+        //    }
+        //}
 
         public Customer ReadNext()
         {
@@ -36,9 +34,9 @@ namespace ConsoleApp12
             return JsonSerializer.Deserialize<Customer>(s);
         }
 
-        //IEnumerator IEnumerable.GetEnumerator()
-        //{
-
-        //}
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
