@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsoleApp12
+namespace Serialization
 {
     public class Product
     {
