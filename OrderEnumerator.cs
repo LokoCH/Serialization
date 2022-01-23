@@ -19,9 +19,8 @@ namespace Serialization
 
         public bool MoveNext()
         {
-            return(_order = _reader.ReadNext()) != null;
+            return (_order = _reader.ReadNext()) != null;
         }
-
         object IEnumerator.Current => throw new NotImplementedException();
 
         public void Dispose() { }

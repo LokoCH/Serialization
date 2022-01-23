@@ -11,28 +11,21 @@ namespace Serialization
         private readonly CustomersReader _reader;
         private Customer _customer;
 
-//        public CustomerEnumerator(IEnumerable<Customer> customers)
-//        {
-//            _customers = customers.ToArray();
-//        }
-//        public Customer Current
-//        {
-//            get
-//            {
-//                return _customers[_index];
-//            }
-//        }
+        public CustomerEnumerator(CustomersReader cr)
+        {
+            _reader = cr;
+        }
+        public Customer Current => _customer;
 
-//        object IEnumerator.Current
-//        {
-//            get;
-//        }
-//        public void Dispose()
-//        {
-//        }
+        object IEnumerator.Current => throw new NotImplementedException();
 
         public void Dispose() { }
 
-        public void Reset(){}
+        public bool MoveNext()
+        {
+           return (_customer = _reader.ReadNext()) != null;
+        }
+
+        public void Reset() { }
     }
 }

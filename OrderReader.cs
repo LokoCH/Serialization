@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace ConsoleApp12
+namespace Serialization
 {
-    public class OrderReader : BaseModelReader
+    public class OrderReader : BaseModelReader, IEnumerable<Order>
     {
         private readonly IEnumerable<Customer> _customers;
         private readonly IEnumerable<Product> _products;
@@ -42,9 +43,9 @@ namespace ConsoleApp12
             return tmp;
         }
 
-            IEnumerator IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
         }
     }
+}

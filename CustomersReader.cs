@@ -15,16 +15,6 @@ namespace Serialization
             return new CustomerEnumerator(this);
         }
 
-        //public IEnumerable<Customer> ReadAll()
-        //{
-        //    if (IsOpened) Close();
-        //    Customer c;
-        //    while ((c = ReadNext()) != null)
-        //    {
-        //        yield return c;
-        //    }
-        //}
-
         public Customer ReadNext()
         {
             if (!IsOpened) Open();
