@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace Serialization
+namespace ConsoleApp12
 {
-    public class ProductReader : BaseModelReader, IEnumerable<Product>
+    public class ProductReader : BaseModelReader
     {
         public ProductReader(string filename) : base(filename) { }
 
@@ -22,11 +21,6 @@ namespace Serialization
             if (s == null)
                 return null;
             return JsonSerializer.Deserialize<Product>(s);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
         }
     }
 }

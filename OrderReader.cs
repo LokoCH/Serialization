@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace Serialization
+namespace ConsoleApp12
 {
-    public class OrderReader : BaseModelReader, IEnumerable<Order>
+    public class OrderReader : BaseModelReader
     {
         private readonly IEnumerable<Customer> _customers;
         private readonly IEnumerable<Product> _products;

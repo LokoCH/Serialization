@@ -18,7 +18,7 @@ namespace Serialization
         public Product Current => _product;
 
         public bool MoveNext()
-        {            
+        {
             return (_product = _reader.ReadNext()) != null;
         }
         public void Dispose(){}
